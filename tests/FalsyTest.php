@@ -1,401 +1,222 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Angle\Falsy\Exceptions\FalsyClosureException;
+
+use Angle\Falsy\Exceptions\ArrayComparisonException;
+use Angle\Falsy\Exceptions\ClosureComparisonException;
+use Angle\Falsy\Exceptions\ObjectComparisonException;
+use Angle\Falsy\Falsy;
 
 final class FalsyTest extends TestCase
 {
-    private function makeClosureReturning($var)
+    public function testNegativeTypes()
     {
-        return function () use ($var) {
-            return $var;
-        };
+        $falsy = falsy(
+            false,
+            null,
+            0,
+            0.0,
+            '0',
+            [],
+            [''],
+            ['' => ''],
+            [false, null],
+            ['' => '', 0 => ['key' => null, 'foo' => [''], 'empty' => []]],
+            new stdClass
+        );
+
+        $this->assertTrue($falsy);
     }
 
-    public function testFalsy()
+    public function testPositiveTypes()
     {
-        // Basic
-        $this->assertTrue(
-            falsy(false)
+        $class = new stdClass;
+        $class->foo = 'bar';
+
+        $truthy = truthy(
+            true,
+            1,
+            0.1,
+            '1',
+            ['1'],
+            ['foo' => 'bar'],
+            [true],
+            $class
         );
 
-        $this->assertFalse(
-            falsy(true)
-        );
-
-        $this->assertFalse(
-            falsy(true, false)
-        );
-
-        $this->assertFalse(
-            falsy(false, true)
-        );
-
-        $this->assertFalse(
-            falsy(false, true, false)
-        );
-
-        // Dummy class
-        $std = new stdClass;
-        $std->nullProperty = '';
-        $std->falseProperty = false;
-
-        // Falsy types
-        $this->assertTrue(
-            falsy(
-                false,
-                0,
-                0.0,
-                '0',
-                [],
-                [''],
-                $std,
-                null
-            )
-        );
-
-        $std->filledProperty = 'foo';
-        $std->trueProperty = true;
-
-        // Truthy types
-        $this->assertFalse(
-            falsy(
-                // Truthy
-                true,
-                1,
-                0.1,
-                '1',
-                ['1'],
-                $std
-            )
-        );
-
-        // Arrays
-        $this->assertFalse(
-            falsy([true, true])
-        );
-
-        $this->assertFalse(
-            falsy([true, false])
-        );
-
-        $this->assertTrue(
-            falsy([false, false])
-        );
-
-        $this->assertTrue(
-            falsy([], [''], [0], ['' => ''], ['key' => null], [[0], [0], [0 => '']])
-        );
-
-        $this->assertFalse(
-            falsy([1], [0, 1], ['key' => 'value'], [0 => [0 => true]])
-        );
-
-        // Closure
-        $this->assertFalse(
-            falsy(function () { return true; })
-        );
-
-        $this->assertTrue(
-            falsy(function () { return false; })
-        );
-
-        $this->assertTrue(
-            falsy(function () { return [false]; })
-        );
-
-        // Exception
-        $this->expectException(FalsyClosureException::class);
-
-        falsy(
-            function () { return false; },
-            function () { return false; }
-        );
+        $this->assertTrue($truthy);
     }
 
-    public function testNullsy()
+    public function testWithoutParameters()
     {
-        // Basic
-        $this->assertTrue(
-            nullsy('')
-        );
-
-        $this->assertTrue(
-            nullsy(0)
-        );
-
-        $this->assertTrue(
-            nullsy('0')
-        );
-
-        $this->assertTrue(
-            nullsy([])
-        );
-
-        $this->assertTrue(
-            nullsy([''])
-        );
-
-        $this->assertTrue(
-            nullsy('', [''])
-        );
-
-        $this->assertFalse(
-            nullsy('', 'foo', [''])
-        );
-
-        $this->assertFalse(
-            nullsy('foo', null, '')
-        );
-
-        $this->assertFalse(
-            nullsy('foo', '0')
-        );
-
-        $this->assertFalse(
-            nullsy('foo', 'bar')
-        );
-
-        // Dummy class
-        $std = new stdClass;
-        $std->nullProperty = '';
-        $std->falseProperty = false;
-
-        // Falsy types
-        $this->assertTrue(
-            nullsy(
-                false,
-                0,
-                0.0,
-                '0',
-                [],
-                [''],
-                $std,
-                null
-            )
-        );
-
-        $std->filledProperty = 'foo';
-        $std->trueProperty = true;
-
-        // Truthy types
-        $this->assertFalse(
-            nullsy(
-                true,
-                1,
-                0.1,
-                '1',
-                ['1'],
-                $std
-            )
-        );
-
-        $this->assertFalse(
-            nullsy(
-                9999,
-                false,
-                0,
-                0.0,
-                '0',
-                [],
-                [''],
-                $std,
-                null
-            )
-        );
-
-        $this->assertFalse(
-            nullsy(
-                false,
-                0,
-                0.0,
-                '0',
-                999,
-                [],
-                [''],
-                $std,
-                null,
-                9999
-            )
-        );
-
-        $this->assertFalse(
-            nullsy(
-                false,
-                0,
-                0.0,
-                '0',
-                [],
-                [''],
-                $std,
-                null,
-                9999
-            )
-        );
-
-        // Arrays
-        $this->assertTrue(
-            nullsy([])
-        );
-
-        $this->assertFalse(
-            nullsy([true, true])
-        );
-
-        $this->assertFalse(
-            nullsy([true, false])
-        );
-
-        $this->assertTrue(
-            nullsy([false, false], [null])
-        );
-
-        $this->assertTrue(
-            nullsy([], [''], [0], ['' => ''], ['key' => null], [[0], [0], [0 => '', [0 => [0 => null]]]])
-        );
-
-        $this->assertFalse(
-            nullsy([1], [0, 1], ['key' => 'value'], [0 => [0 => true]])
-        );
-        $this->assertFalse(
-            nullsy(null, [1], [0, 1], ['key' => 'value'], [0 => [0 => true]])
-        );
-
-        // Closure
-        $this->assertFalse(
-            falsy(function () { return true; })
-        );
-
-        $this->assertTrue(
-            falsy(function () { return false; })
-        );
-
-        $this->assertTrue(
-            falsy(function () { return [false]; })
-        );
-
-        // Exception
-        $this->expectException(FalsyClosureException::class);
-
-        falsy(
-            function () { return false; },
-            function () { return false; }
-        );
+        $this->assertTrue((new Falsy)->isFalsy());
     }
 
-    public function testTruthy()
+    public function testWithTrue()
     {
-        // Basic
-        $this->assertTrue(
-            truthy(true)
-        );
+        $this->assertTrue((new Falsy(true))->isTruthy());
+    }
 
-        $this->assertFalse(
-            truthy(false)
-        );
+    public function testWithFalse()
+    {
+        $this->assertTrue((new Falsy(false))->isFalsy());
+    }
 
-        $this->assertFalse(
-            truthy(false, true)
-        );
+    public function testWithBooleans()
+    {
+        $falsy = new Falsy;
+        $this->assertTrue($falsy->isFalsy());
+        $this->assertFalse($falsy->isTruthy());
 
-        $this->assertFalse(
-            truthy(true, false)
-        );
+        $this->assertTrue((new Falsy(true))->isTruthy());
+        $this->assertTrue((new Falsy(false))->isFalsy());
+        $this->assertTrue((new Falsy(false, false))->isFalsy());
+        $this->assertTrue((new Falsy(true, true))->isTruthy());
+        $this->assertTrue((new Falsy(false, true))->isFalsy());
+        $this->assertTrue((new Falsy(true, false))->isFalsy());
+        $this->assertTrue((new Falsy(true, false, true, false, false))->isFalsy());
+    }
 
-        $this->assertFalse(
-            truthy(true, false, true)
-        );
+    public function testWithEmptyString()
+    {
+        $this->assertTrue((new Falsy(''))->isFalsy());
+        $this->assertTrue((new Falsy('', '', ''))->isFalsy());
+        $this->assertTrue((new Falsy('', '', 'x'))->isFalsy());
+        $this->assertTrue((new Falsy('', 'x', ''))->isFalsy());
+        $this->assertTrue((new Falsy('x', '', ''))->isFalsy());
+        $this->assertTrue((new Falsy('foo', 'bar'))->isTruthy());
+    }
 
-        $this->assertFalse(
-            truthy(false, true, false)
-        );
+    public function testWithNull()
+    {
+        $this->assertTrue((new Falsy(null))->isFalsy());
+        $this->assertTrue((new Falsy(null, null, null))->isFalsy());
+    }
 
-        $this->assertTrue(
-            truthy(1, ' ', true)
-        );
+    public function testWithZero()
+    {
+        $this->assertTrue((new Falsy(0))->isFalsy());
+        $this->assertFalse((new Falsy(1))->isFalsy());
+        $this->assertFalse((new Falsy(-1))->isFalsy());
+    }
 
-        $this->assertFalse(
-            truthy(
-                true,
-                false
-            )
-        );
+    public function testWithZeroFloat()
+    {
+        $this->assertTrue((new Falsy(0.0))->isFalsy());
+        $this->assertFalse((new Falsy(0.1))->isFalsy());
+        $this->assertFalse((new Falsy(-0.1))->isFalsy());
+    }
 
-        // Dummy class
-        $std = new stdClass;
-        $std->nullProperty = '';
-        $std->falseProperty = false;
+    public function testWithZeroString()
+    {
+        $this->assertTrue((new Falsy('0'))->isFalsy());
+        $this->assertFalse((new Falsy('1'))->isFalsy());
+    }
 
-        // Falsy types
-        $this->assertFalse(
-            truthy(
-                false,
-                0,
-                0.0,
-                '0',
-                [],
-                [''],
-                $std,
-                null
-            )
-        );
+    public function testWithEmptyArray()
+    {
+        $this->assertTrue((new Falsy([]))->isFalsy());
+        $this->assertTrue((new Falsy([0]))->isFalsy());
+        $this->assertTrue((new Falsy(['']))->isFalsy());
+        $this->assertTrue((new Falsy(['' => '']))->isFalsy());
+        $this->assertTrue((new Falsy(['key' => '']))->isFalsy());
+    }
 
-        $std->filledProperty = 'foo';
-        $std->trueProperty = true;
+    public function testWithFilledArray()
+    {
+        $this->assertTrue((new Falsy([1]))->isTruthy());
+        $this->assertTrue((new Falsy([true]))->isTruthy());
+        $this->assertTrue((new Falsy([true, false]))->isFalsy());
+        $this->assertTrue((new Falsy(['' => 'value']))->isTruthy());
+        $this->assertTrue((new Falsy(['', '', '']))->isFalsy());
+        $this->assertTrue((new Falsy(['key' => 'value']))->isTruthy());
+    }
 
-        // Truthy types
-        $this->assertTrue(
-            truthy(
-                // Truthy
-                true,
-                1,
-                0.1,
-                '1',
-                ['1'],
-                $std
-            )
-        );
+    public function testWithEmptyObject()
+    {
+        $object = new stdClass;
+        $object->boolProperty = false;
+        $object->stringProperty = null;
+        $object->intProperty = 0;
+        $object->numericProperty = '0';
+        $object->arrayProperty = [false, null, 0, '0', 'key' => null, 'nested' => [0 => [0 => false]]];
 
-        // Arrays
-        $this->assertTrue(
-            truthy([true, true])
-        );
+        $this->assertTrue((new Falsy($object))->isFalsy());
+        $this->assertTrue((new Falsy($object, $object, $object))->isFalsy());
+        $this->assertFalse((new Falsy($object))->isTruthy());
+        $this->assertFalse((new Falsy($object, $object, $object))->isTruthy());
+    }
 
-        $this->assertFalse(
-            truthy([true, false])
-        );
+    public function testWithFilledObject()
+    {
+        $object = new stdClass;
+        $object->boolProperty = true;
+        $object->stringProperty = 'foo';
+        $object->intProperty = 1;
+        $object->numericProperty = '1';
+        $object->arrayProperty = [true, 'foo', 1, '1', 'key' => 'bar', 'nested' => [0 => [0 => true]]];
 
-        $this->assertFalse(
-            truthy([false, false])
-        );
+        $this->assertFalse((new Falsy($object))->isFalsy());
+        $this->assertFalse((new Falsy($object, $object, $object))->isFalsy());
+        $this->assertTrue((new Falsy($object))->isTruthy());
+        $this->assertTrue((new Falsy($object, $object, $object))->isTruthy());
+    }
 
-        $this->assertFalse(
-            truthy([], [''], [0], ['' => ''], ['key' => null], [[0], [0], [0 => '']])
-        );
+    public function testWithMixedObject()
+    {
+        $object = new stdClass;
+        $object->boolTruthy = true;
+        $object->stringTruthy = 'foo';
+        $object->intTruthy = 1;
+        $object->numericTruthy = '1';
+        $object->arrayTruthy = [true, 'foo', 1, '1', 'key' => 'bar', 'nested' => [0 => [0 => true]]];
+        $object->boolFalsy = false;
+        $object->stringFalsy = null;
+        $object->intFalsy = 0;
+        $object->numericFalsy = '0';
+        $object->arrayFalsy = [false, null, 0, '0', 'key' => null, 'nested' => [0 => [0 => false]]];
 
-        $this->assertTrue(
-            truthy([1], [0, 1], ['key' => 'value'], [0 => [0 => true]])
-        );
+        $this->assertTrue((new Falsy($object))->isFalsy());
+        $this->assertTrue((new Falsy($object, $object, $object))->isFalsy());
+        $this->assertFalse((new Falsy($object))->isTruthy());
+        $this->assertFalse((new Falsy($object, $object, $object))->isTruthy());
+    }
 
-        // Closure
-        $this->assertTrue(
-            truthy(function () { return true; })
-        );
+    public function testWithClosures()
+    {
+        $true = function () { return true; };
+        $false = function () { return false; };
+        $null = function () { return null; };
+        $zero = function () { return 0; };
+        $int = function () { return 1; };
+        $void = function () { return; };
 
-        $this->assertFalse(
-            truthy(function () { return false; })
-        );
+        $this->assertTrue((new Falsy($true))->isTruthy());
+        $this->assertTrue((new Falsy($false))->isFalsy());
+        $this->assertTrue((new Falsy($null))->isFalsy());
+        $this->assertTrue((new Falsy($zero))->isFalsy());
+        $this->assertTrue((new Falsy($int))->isTruthy());
+        $this->assertTrue((new Falsy($void))->isFalsy());
 
-        $this->assertFalse(
-            truthy(function () { return [false]; })
-        );
+        $this->assertFalse((new Falsy($false))->isTruthy());
+        $this->assertFalse((new Falsy($null))->isTruthy());
 
-        // Exception
-        $this->expectException(FalsyClosureException::class);
+        $this->assertTrue((new Falsy($false, $false, $false))->isFalsy());
+        $this->assertTrue((new Falsy($null, $null, $null))->isFalsy());
 
-        truthy(
-            function () { return false; },
-            function () { return false; }
-        );
+        $this->assertTrue((new Falsy($false, $null, $true))->isFalsy());
+        $this->assertTrue((new Falsy($true, $int, $true))->isTruthy());
+    }
+
+    public function testWithUndefinedVariables()
+    {
+        $array = ['foo' => 'bar'];
+
+        // One should never use @function to prevent errors from popping up,
+        // as it is a bad practice. But this was the only way to make falsy
+        // able to assert truthiness or falseness on undefined variables.
+
+        $this->assertTrue(@falsy($array['baz'], $undefined));
+        $this->assertFalse(@truthy($array['baz'], $undefined));
     }
 }
