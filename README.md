@@ -45,7 +45,7 @@ Returns true only when all variables are truthy (opposite of falsy).
         ['foo' => 'bar'],
         [true],
         $class
-    );;
+    );
 ```
 
 ## Contributing
