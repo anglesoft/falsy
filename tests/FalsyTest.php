@@ -22,7 +22,14 @@ final class FalsyTest extends TestCase
             ['' => ''],
             [false, null],
             ['' => '', 0 => ['key' => null, 'foo' => [''], 'empty' => []]],
-            new stdClass
+            new stdClass,
+            function () { return; },
+            function () { return false; },
+            function () { return null; },
+            function () { return ''; },
+            function () { return 0; },
+            function () { return []; },
+            function () { return ['']; }
         );
 
         $this->assertTrue($falsy);
@@ -38,10 +45,18 @@ final class FalsyTest extends TestCase
             1,
             0.1,
             '1',
-            ['1'],
+            ['foo'],
             ['foo' => 'bar'],
             [true],
-            $class
+            $class,
+            function () { return true; },
+            function () { return 1; },
+            function () { return 0.1; },
+            function () { return '1'; },
+            function () { return ['foo']; },
+            function () { return ['foo' => 'bar']; },
+            function () { return [true]; },
+            function () use ($class) { return $class; }
         );
 
         $this->assertTrue($truthy);

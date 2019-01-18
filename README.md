@@ -29,7 +29,9 @@ Returns true only when all variables are truthy (opposite of falsy).
         [false, null],
         ['' => '', 0 => ['key' => null, 'foo' => [''], 'empty' => []]
         ],
-        new stdClass
+        new stdClass,
+        function () { return; },
+        function () {}
     );
 
     $class = new stdClass;
