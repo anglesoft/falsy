@@ -1,4 +1,4 @@
-# Falsy helps you manage half-truths with PHP
+# Functions for dealing with falsy and truthy values in PHP.
 
 - Tiny library (< 200 lines total, adds 2 functions to the global namespace)
 - No dependencies
