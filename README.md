@@ -1,6 +1,6 @@
-# Falsy helps you managing half-truths with PHP.
+# Falsy helps you manage half-truths with PHP
 
-- Tiny library (< 200 lines total, adds 2 functions to global namespace)
+- Tiny library (< 200 lines total, adds 2 functions to the global namespace)
 - No dependencies
 - Fully tested
 - Requires PHP version ^7.0
@@ -56,4 +56,4 @@ Contributions are welcomed! Feel free to submit a pull request anytime.
 
 MIT License
 
-Copyright (c) 2019 Angle Software
+Copyright © 2019 Angle Software

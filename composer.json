@@ -1,7 +1,7 @@
 {
     "name": "angle/falsy",
     "type": "library",
-    "description": "🤯 How to deal with falsy and truthy values in PHP.",
+    "description": "Falsy helps you manage half-truths with PHP",
     "keywords": [
         "php",
         "falsy",
