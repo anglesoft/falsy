@@ -6,7 +6,7 @@
         "php",
         "falsy",
         "truthy",
-        "helpers",
+        "helpers"
     ],
     "license": "MIT",
     "authors": [
@@ -24,11 +24,7 @@
         "phpunit/php-code-coverage": "^6.1"
     },
     "autoload": {
-        "classmap": [
-            "src/"
-        ],
-        "files": [
-            "src/Support/helpers.php"
-        ]
+        "classmap": ["src/"],
+        "files": ["src/Support/helpers.php"]
     }
 }
