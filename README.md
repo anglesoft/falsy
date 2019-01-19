@@ -62,7 +62,7 @@ falsy($array); // false
 truthy($array); // true
 ```
 
-Objects are converted to array, then audited as such.
+Objects are audited on their properties.
 
 ```php
 $object = new stdClass;
