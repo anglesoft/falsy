@@ -5,7 +5,8 @@
     "keywords": [
         "php",
         "falsy",
-        "truthy"
+        "truthy",
+        "helpers",
     ],
     "license": "MIT",
     "authors": [

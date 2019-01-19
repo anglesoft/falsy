@@ -2,13 +2,80 @@
 
 use PHPUnit\Framework\TestCase;
 
-use Angle\Falsy\Exceptions\ArrayComparisonException;
-use Angle\Falsy\Exceptions\ClosureComparisonException;
-use Angle\Falsy\Exceptions\ObjectComparisonException;
 use Angle\Falsy\Falsy;
 
 final class FalsyTest extends TestCase
 {
+    public function testExamples()
+    {
+        $this->assertTrue(falsy(true, false, null));
+        $this->assertFalse(truthy(true, false, null));
+
+        $this->assertFalse(falsy(true, 1, [1]));
+        $this->assertTrue(truthy(true, 1, [1]));
+
+        $this->assertTrue(falsy('0', '', [], ['']));
+        $this->assertFalse(truthy('0', '', [], ['']));
+
+        $array = [
+            'foo' => false,
+            'bar'=> [
+                'baz' => false
+            ]
+        ];
+
+        $this->assertTrue(falsy($array));
+        $this->assertFalse(truthy($array));
+
+        $array = [
+            'foo' => true,
+            'bar'=> [
+                'baz' => 1
+            ]
+        ];
+
+        $this->assertFalse(falsy($array));
+        $this->assertTrue(truthy($array));
+
+
+        $object = new stdClass;
+
+        $this->assertTrue(falsy($object));
+        $this->assertFalse(truthy($object));
+
+        $object->foo = false;
+        $object->bar = null;
+        $object->baz = 0;
+
+        $this->assertTrue(falsy($object));
+        $this->assertFalse(truthy($object));
+
+        $object->foo = true;
+        $object->bar = 'string';
+        $object->baz = 1;
+
+        $this->assertFalse(falsy($object));
+        $this->assertTrue(truthy($object));
+
+        $void = function () { return; };
+
+        $this->assertTrue(falsy($void));
+        $this->assertFalse(truthy($void));
+
+        $false = function () { return false; };
+
+        $this->assertTrue(falsy($false));
+        $this->assertFalse(truthy($false));
+
+        $string = function () { return 'string'; };
+
+        $this->assertFalse(falsy($string));
+        $this->assertTrue(truthy($string));
+
+        $this->assertTrue(falsy($void, $false, $string));
+        $this->assertFalse(truthy($void, $false, $string));
+    }
+
     public function testNegativeTypes()
     {
         $falsy = falsy(
