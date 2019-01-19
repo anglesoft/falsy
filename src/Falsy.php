@@ -13,7 +13,7 @@ final class Falsy
     protected $vars = [];
 
     /**
-     * State of truth, defaulted to false
+     * State of truth
      * @var bool $falsy
      */
     protected $falsy = false;
@@ -47,7 +47,7 @@ final class Falsy
 
     /**
      * Change the state of truth
-     * @param  boolean $falsy
+     * @param  bool $falsy
      * @return bool
      */
     private function setFalsy(bool $falsy = true) : bool
