@@ -154,6 +154,15 @@ truthy(
 ); // true
 ```
 
+## Testing
+
+Run the test suite by executing:
+
+```shell
+    composer install
+    ./vendor/bin/phpunit
+```
+
 ## Contributing
 
 Contributions are welcomed! Feel free to submit a pull request anytime.
