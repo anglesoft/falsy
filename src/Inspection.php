@@ -3,7 +3,7 @@
 trait Inspection
 {
     /**
-     * Checks if variable is empty
+     * Checks if variable is empty.
      * @param  array $var
      * @return bool
      */
@@ -13,7 +13,7 @@ trait Inspection
     }
 
     /**
-     * Checks if index is set
+     * Checks if index is set.
      * @param  mixed $var
      * @return bool
      */
@@ -23,7 +23,7 @@ trait Inspection
     }
 
     /**
-     * Checks if var is instance of closure
+     * Checks if var is instance of closure.
      * @param  mixed $var
      * @return bool
      */
@@ -33,7 +33,7 @@ trait Inspection
     }
 
     /**
-     * Checks if var is of type array
+     * Checks if var is of type array.
      * @param  mixed $var
      * @return bool
      */
@@ -43,12 +43,23 @@ trait Inspection
     }
 
     /**
-     * Checks if var is of object type
-     * @param  [type] $var
+     * Checks if var is of object type.
+     * @param  mixed $var
      * @return bool
      */
     public function isObject($var) : bool
     {
         return is_object($var);
+    }
+
+    /**
+     * Checks if object implements a given method.
+     * @param  mixed $object
+     * @param  string $method
+     * @return bool
+     */
+    public function hasMethod($object, string $method) : bool
+    {
+        return method_exists($object, $method);
     }
 }

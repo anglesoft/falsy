@@ -92,7 +92,12 @@ final class Falsy
             }
 
             if ($this->isObject($var)) {
-                $this->audit((array) $var);
+                if ($this->hasMethod($var, 'toArray')) {
+                    $this->audit($var->toArray());
+                } else {
+                    $this->audit((array) $var);
+                }
+
                 continue;
             }
 

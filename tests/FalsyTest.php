@@ -4,6 +4,23 @@ use PHPUnit\Framework\TestCase;
 
 use Angle\Falsy\Falsy;
 
+class DummyObject {}
+
+class DummyObjectWithToArray
+{
+    private $data = [];
+
+    public function __construct(array $data)
+    {
+        $this->data = $data;
+    }
+
+    public function toArray() : array
+    {
+        return $this->data;
+    }
+}
+
 final class FalsyTest extends TestCase
 {
     public function testExamples()
@@ -300,5 +317,29 @@ final class FalsyTest extends TestCase
 
         $this->assertTrue(@falsy($array['baz'], $undefined));
         $this->assertFalse(@truthy($array['baz'], $undefined));
+    }
+
+    public function testDummyObject()
+    {
+        $dum = new DummyObject;
+
+        $this->assertTrue(falsy($dum));
+        $this->assertFalse(truthy($dum));
+    }
+
+    public function testObjectFalsyWithToArrayImplementation()
+    {
+        $dum = new DummyObjectWithToArray(['foo' => '']);
+
+        $this->assertTrue(falsy($dum));
+        $this->assertFalse(truthy($dum));
+    }
+
+    public function testObjectTruthyWithToArrayImplementation()
+    {
+        $dum = new DummyObjectWithToArray(['foo' => 'bar']);
+
+        $this->assertTrue(truthy($dum));
+        $this->assertFalse(falsy($dum));
     }
 }
