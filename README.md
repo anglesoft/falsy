@@ -171,4 +171,4 @@ Contributions are welcomed! Feel free to submit a pull request anytime.
 
 MIT License
 
-Copyright © 2019 Angle Software
+Copyright © 2019 [Angle Software](https://angle.software)
