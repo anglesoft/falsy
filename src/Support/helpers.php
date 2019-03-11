@@ -8,7 +8,7 @@ if (! function_exists('falsy')) {
      */
     function falsy(...$vars) : bool
     {
-        return (new \Angle\Falsy\Falsy($vars))->isFalsy();
+        return (new \Angle\Falsy($vars))->isFalsy();
     }
 }
 
@@ -20,6 +20,6 @@ if (! function_exists('truthy')) {
      */
     function truthy(...$vars) : bool
     {
-        return (new \Angle\Falsy\Falsy($vars))->isTruthy();
+        return (new \Angle\Falsy($vars))->isTruthy();
     }
 }

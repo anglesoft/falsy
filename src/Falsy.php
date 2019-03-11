@@ -1,10 +1,10 @@
 <?php
 
-namespace Angle\Falsy;
+namespace Angle;
 
 final class Falsy
 {
-    use \Inspection;
+    use Falsy\Inspection;
 
     /**
      * Internals passed in constructor

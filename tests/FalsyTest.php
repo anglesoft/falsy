@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-use Angle\Falsy\Falsy;
+use Angle\Falsy;
 
 class DummyObject {}
 

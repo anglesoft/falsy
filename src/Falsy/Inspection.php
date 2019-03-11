@@ -1,5 +1,7 @@
 <?php
 
+namespace Angle\Falsy;
+
 trait Inspection
 {
     /**
